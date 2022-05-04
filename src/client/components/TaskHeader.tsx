@@ -3,6 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Box, Label, Button, jsx, Select, Slider, Text, ThemeUIStyleObject } from "theme-ui";
 
+import { submitResultBuilding } from "../api";
+
+import { ResultBuildingData } from "../../shared/entities";
+
 const style: Record<string, ThemeUIStyleObject> = {
     header: {
         variant: "styles.header.app",
@@ -26,9 +30,11 @@ const style: Record<string, ThemeUIStyleObject> = {
 const TaskHeader = ({
     label,
     readyToSubmit,
+    resultBuildingData
 }: {
     readonly label?: string;
     readonly readyToSubmit: boolean;
+    readonly resultBuildingData?: ResultBuildingData;
 }) => {
     return (
         <Flex sx={style.header}>
@@ -36,12 +42,14 @@ const TaskHeader = ({
                 <strong>INSTRUCTIONS:</strong><span sx={style.taskLabel}>{label}</span>
             </Flex>
             {readyToSubmit &&
-                <button sx={style.submitButton}>
+                <button sx={style.submitButton} onClick={() => submitResultBuilding(resultBuildingData)}>
                     <span>Submit</span>
                 </button>
             }
         </Flex>
     );
 };
+
+// onClick={submitResultBuilding}
 
 export default TaskHeader;

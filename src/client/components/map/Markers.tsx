@@ -23,13 +23,7 @@ const Marker = ({
     const name = point ? (Object.keys(icons).includes(point.name) ? point.name as keyof typeof icons : "default") : "default";
 
     useEffect(() => {
-        console.log("marker")
-        console.log(point);
-    }, [point]);
-
-    useEffect(() => {
         if (map && point && markerRef.current) {
-            console.log("marker saw add");
             const marker = new MapboxGL.Marker(markerRef.current, {
                 draggable: true
             })
@@ -53,11 +47,6 @@ const Markers = ({
     map?: MapboxGL.Map;
     points?: Point[]
 }) => {
-
-    useEffect(() => {
-        console.log("markers");
-        console.log(points);
-    }, [points]);
 
     return (
         <div className="markers">          {

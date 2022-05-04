@@ -10,27 +10,29 @@ import {
 } from "../types";
 
 import { fetchTaskBuilding } from "../api";
-import { TaskBuildingData } from "../../shared/entities";
+import { TaskID, TaskBuildingData, ResultBuildingData } from "../../shared/entities";
 
 import TaskMap from "../components/map/Map";
 import TaskHeader from "../components/TaskHeader";
 
 const TaskBuildingScreen = () => {
 
-    const { taskID } = useParams();
-
     const [map, setMap] = useState<MapboxGL.Map | undefined>(undefined);
     const [buildingPoints, setBuildingPoints] = useState<Point[]>([]);
     const [buildingData, setBuildingData] = useState<TaskBuildingData[]>([]);
+    const [taskPoints, setTaskPoints] = useState<Point[]>([]);
+    const [resultBuildingData, setResultBuildingData] = useState<ResultBuildingData>();
+
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(true);
     const [havePoint, setHavePoint] = useState(false);
+
+    const { taskID } = useParams();
 
     useEffect(() => {
         if (taskID) {
             fetchTaskBuilding(taskID)
                 .then(response => {
-                    console.log(`task_buildings: ${JSON.stringify(response)}`);
                     response.forEach(bldg => {
                         if (typeof (bldg.lat) != 'number' || typeof (bldg.lon) != 'number') {
                             return;
@@ -57,6 +59,17 @@ const TaskBuildingScreen = () => {
             setHasError(true);
         }
     }, [buildingData])
+
+    useEffect(() => {
+        if (taskID && taskPoints.length) {
+            setResultBuildingData({
+                taskID: taskID,
+                logTs: Math.floor(new Date().getTime() / 1000),
+                newLat: taskPoints[0].lnglat.lat,
+                newLon: taskPoints[0].lnglat.lng
+            })
+        }
+    }, [taskID, taskPoints])
 
     // TODO:
     // what if buildings[0] latlng is NA??
@@ -94,6 +107,7 @@ const TaskBuildingScreen = () => {
                             <TaskHeader
                                 label={instructionsLabel}
                                 readyToSubmit={havePoint}
+                                resultBuildingData={resultBuildingData}
                             />
                         ) : (
                             <Flex></Flex>
@@ -103,7 +117,9 @@ const TaskBuildingScreen = () => {
                             setMap={setMap}
                             setHavePoint={setHavePoint}
                             center={buildingPoints[0]}
-                            buildings={buildingPoints}
+                            buildingPoints={buildingPoints}
+                            taskPoints={taskPoints}
+                            setTaskPoints={setTaskPoints}
                         />
                     </Flex>
                 }

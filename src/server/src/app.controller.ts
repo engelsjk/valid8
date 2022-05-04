@@ -30,15 +30,8 @@ export class AppController {
   }
 
   @Post('api/result/building/:id')
-  resultBuildingRoute(@Param('id') id: string, @Body() taskBuildingData: TaskBuildingData) {
+  resultBuildingRoute(@Param('id') id: string, @Body() resultBuildingData: ResultBuildingData) {
     const path = resolve(configuration().apiDataPath, `result/building/${id}`);
-    let resultBuildingData = {} as ResultBuildingData;
-
-    resultBuildingData['CLLI'] = taskBuildingData['CLLI'];
-    resultBuildingData['lat'] = taskBuildingData['lat'];
-    resultBuildingData['lon'] = taskBuildingData['lon'];
-    resultBuildingData['logTs'] = Math.floor(new Date().getTime() / 1000);
-
     const j = JSON.stringify(resultBuildingData);
     writeFile(path, j, err => {
       if (err) {

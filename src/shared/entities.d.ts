@@ -25,6 +25,9 @@ export interface TaskBuildingData {
     'Property.Manager': string;
 }
 
-export interface ResultBuildingData extends TaskBuildingData {
+export interface ResultBuildingData {
+    taskID: string;
     logTs: number;
+    newLat: number;
+    newLon: number;
 }
