@@ -25,12 +25,6 @@ export interface TaskBuildingData {
     'Property.Manager': string;
 }
 
-export interface ResultBuildingData {
-    'Street.Address': string;
-    State: string;
-    City: string;
-    Zip: string;
-    CLLI: string;
-    lat: number;
-    lon: number;
+export interface ResultBuildingData extends TaskBuildingData {
+    logTs: number;
 }

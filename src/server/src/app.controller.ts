@@ -5,7 +5,7 @@ import { resolve } from 'path';
 
 import configuration from './configuration';
 
-import { TaskBuildingData } from '../../shared/entities';
+import { ResultBuildingData, TaskBuildingData } from '../../shared/entities';
 
 @Controller()
 export class AppController {
@@ -32,7 +32,14 @@ export class AppController {
   @Post('api/result/building/:id')
   resultBuildingRoute(@Param('id') id: string, @Body() taskBuildingData: TaskBuildingData) {
     const path = resolve(configuration().apiDataPath, `result/building/${id}`);
-    const j = JSON.stringify(taskBuildingData);
+    let resultBuildingData = {} as ResultBuildingData;
+
+    resultBuildingData['CLLI'] = taskBuildingData['CLLI'];
+    resultBuildingData['lat'] = taskBuildingData['lat'];
+    resultBuildingData['lon'] = taskBuildingData['lon'];
+    resultBuildingData['logTs'] = Math.floor(new Date().getTime() / 1000);
+
+    const j = JSON.stringify(resultBuildingData);
     writeFile(path, j, err => {
       if (err) {
         throw new HttpException({
