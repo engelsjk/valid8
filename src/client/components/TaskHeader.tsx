@@ -16,7 +16,8 @@ const style: Record<string, ThemeUIStyleObject> = {
         justifyContent: "space-between",
         px: 2,
         py: 1,
-        height: "50px"
+        height: "50px",
+        fontSize: "1.5em"
     },
     taskLabel: {
         paddingLeft: "5px"

@@ -14,6 +14,7 @@ import { TaskID, TaskBuildingData, ResultBuildingData } from "../../shared/entit
 
 import TaskMap from "../components/map/Map";
 import TaskHeader from "../components/TaskHeader";
+import TaskSidebar from "../components/TaskSidebar";
 
 const TaskBuildingScreen = () => {
 
@@ -99,7 +100,7 @@ const TaskBuildingScreen = () => {
                     <Flex
                         sx={{
                             flexDirection: "column",
-                            flex: 1,
+                            flex: 3,
                             background: "#fff",
                         }}
                     >
@@ -122,6 +123,8 @@ const TaskBuildingScreen = () => {
                             setTaskPoints={setTaskPoints}
                         />
                     </Flex>
+                }
+                {<TaskSidebar />
                 }
             </Flex>
         </Flex>
