@@ -14,6 +14,5 @@ export interface AssetLayer {
 }
 
 export interface Point {
-    readonly name: string;
     readonly lnglat: mapboxgl.LngLat;
 }

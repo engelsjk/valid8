@@ -5,24 +5,26 @@ import icons from "../icons";
 
 interface IconProps {
     readonly name: keyof typeof icons;
-    readonly color?: string;
+    readonly symbolColor?: string;
+    readonly backgroundColor?: string;
     readonly size?: number;
     readonly className?: string;
     readonly sx?: ThemeUIStyleObject;
 }
 
-const Icon = ({ name, color, size, className }: IconProps) => {
-    const { path, viewBox } = icons[name];
+const viewBox: string = "0 0 24 24";
+
+const Icon = ({ name, symbolColor, backgroundColor, size, className }: IconProps) => {
+    const { path } = icons[name];
     const iconSize = size ? size : 1;
     return (
         <svg
             className={className}
             sx={{ height: `${iconSize}px`, width: `${iconSize}px` }}
-            // height={`24px`}
-            // width={`24px`}
             viewBox={viewBox}
         >
-            <path d={path} sx={{ fill: color ? color : "currentColor" }} />
+            <circle cx="12" cy="12" r="11" sx={{ fill: backgroundColor ? backgroundColor : "currentColor", stroke: "black", strokeWidth: "1" }} />
+            <path d={path} sx={{ fill: symbolColor ? symbolColor : "currentColor" }} />
         </svg >
     );
 };

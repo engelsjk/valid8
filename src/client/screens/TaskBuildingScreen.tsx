@@ -10,48 +10,48 @@ import {
 } from "../types";
 
 import { fetchTaskBuilding } from "../api";
-import { TaskID, TaskBuildingData, ResultBuildingData } from "../../shared/entities";
+import { ITask, TaskBuildingData, ResultBuildingData } from "../../shared/entities";
 
-import TaskMap from "../components/map/Map";
+import Map from "../components/map/Map";
 import TaskHeader from "../components/TaskHeader";
 import TaskSidebar from "../components/TaskSidebar";
 
 const TaskBuildingScreen = () => {
 
     const [map, setMap] = useState<MapboxGL.Map | undefined>(undefined);
-    const [buildingPoints, setBuildingPoints] = useState<Point[]>([]);
-    const [buildingData, setBuildingData] = useState<TaskBuildingData[]>([]);
-    const [taskPoints, setTaskPoints] = useState<Point[]>([]);
-    const [resultBuildingData, setResultBuildingData] = useState<ResultBuildingData>();
+    const [taskPoint, setTaskPoint] = useState<Point>();
+    const [taskData, setTaskData] = useState<TaskBuildingData>();
+    const [capturePoint, setCapturePoint] = useState<Point | undefined>(undefined);
+    const [resultData, setResultData] = useState<ResultBuildingData>();
 
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(true);
     const [havePoint, setHavePoint] = useState(false);
 
     const { taskID } = useParams();
+    const task: ITask = {
+        id: taskID
+    }
 
     useEffect(() => {
-        if (taskID) {
+        if (task.id) {
             fetchTaskBuilding(taskID)
-                .then(response => {
-                    response.forEach(bldg => {
-                        if (typeof (bldg.lat) != 'number' || typeof (bldg.lon) != 'number') {
-                            return;
-                        }
-                        setBuildingPoints(buildingPoints => [...buildingPoints, {
-                            name: "task-building",
-                            lnglat: new MapboxGL.LngLat(bldg.lon, bldg.lat)
-                        }]);
-                        setBuildingData(buildingData => [...buildingData, bldg]);
+                .then(bldg => {
+                    if (typeof (bldg.lat) != 'number' || typeof (bldg.lon) != 'number') {
+                        return;
+                    }
+                    setTaskPoint({
+                        lnglat: new MapboxGL.LngLat(bldg.lon, bldg.lat)
                     });
+                    setTaskData(bldg);
                     setIsLoading(false);
                 });
         }
-    }, [taskID])
+    }, [task])
 
     useEffect(() => {
-        if (buildingData.length) {
-            if (typeof (buildingData[0].lat) != 'number' || typeof (buildingData[0].lon) != 'number') {
+        if (taskData) {
+            if (typeof (taskData.lat) != 'number' || typeof (taskData.lon) != 'number') {
                 setHasError(true);
             } else {
                 setHasError(false);
@@ -59,30 +59,23 @@ const TaskBuildingScreen = () => {
         } else {
             setHasError(true);
         }
-    }, [buildingData])
+    }, [taskData])
 
     useEffect(() => {
-        if (taskID && taskPoints.length) {
-            setResultBuildingData({
-                taskID: taskID,
+        if (task.id && capturePoint) {
+            setResultData({
+                taskID: task.id,
                 logTs: Math.floor(new Date().getTime() / 1000),
-                newLat: taskPoints[0].lnglat.lat,
-                newLon: taskPoints[0].lnglat.lng
+                newLat: capturePoint.lnglat.lat,
+                newLon: capturePoint.lnglat.lng
             })
         }
-    }, [taskID, taskPoints])
+    }, [task.id, capturePoint])
 
     // TODO:
     // what if buildings[0] latlng is NA??
     // what if task/building/{taskid} JSON is not a []??
     // maybe feed map a zoom value?
-
-    let hasInstructions = true;
-    let instructionsLabel = "INSTRUCTIONS: Unknown";
-    if (buildingData.length) {
-        const bldg = buildingData[0];
-        instructionsLabel = `Locate the building entrance for ${bldg['Street.Address']}.`;
-    }
 
     if (isLoading) {
         return <div className="App">Loading...</div>;
@@ -94,8 +87,8 @@ const TaskBuildingScreen = () => {
 
     return (
         <Flex sx={{ height: "100%", flexDirection: "column" }}>
-            {/* Header */}
-            <Flex sx={{ flex: 1, overflowY: "auto" }}>
+            <TaskHeader task={task} />
+            <Flex sx={{ flex: 1, overflowY: "hidden" }}>
                 {
                     <Flex
                         sx={{
@@ -104,27 +97,26 @@ const TaskBuildingScreen = () => {
                             background: "#fff",
                         }}
                     >
-                        {hasInstructions ? (
-                            <TaskHeader
-                                label={instructionsLabel}
-                                readyToSubmit={havePoint}
-                                resultBuildingData={resultBuildingData}
+                        <React.Fragment>
+                            <Map
+                                map={map}
+                                setMap={setMap}
+                                setHavePoint={setHavePoint}
+                                taskPoint={taskPoint}
+                                iconName={"entrance"}
+                                capturePoint={capturePoint}
+                                setCapturePoint={setCapturePoint}
                             />
-                        ) : (
-                            <Flex></Flex>
-                        )}
-                        <TaskMap
-                            map={map}
-                            setMap={setMap}
-                            setHavePoint={setHavePoint}
-                            center={buildingPoints[0]}
-                            buildingPoints={buildingPoints}
-                            taskPoints={taskPoints}
-                            setTaskPoints={setTaskPoints}
-                        />
+                        </React.Fragment>
                     </Flex>
                 }
-                {<TaskSidebar />
+                {<TaskSidebar
+                    task={task}
+                    taskData={taskData}
+                    resultData={resultData}
+                    capturePoint={capturePoint}
+                    readyToSave={havePoint}
+                />
                 }
             </Flex>
         </Flex>
@@ -132,3 +124,8 @@ const TaskBuildingScreen = () => {
 }
 
 export default TaskBuildingScreen;
+
+// setTaskPoints(taskPoints => [...taskPoints, {
+//     name: "task-building",
+//     lnglat: new MapboxGL.LngLat(bldg.lon, bldg.lat)
+// }]);

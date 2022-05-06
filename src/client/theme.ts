@@ -1,5 +1,9 @@
 import type { Theme } from 'theme-ui'
 
+export const heights = {
+    header: "48px"
+};
+
 export const theme: Theme = {
     fonts: {
         body: 'system-ui, sans-serif',

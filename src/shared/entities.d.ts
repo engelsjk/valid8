@@ -1,6 +1,11 @@
 import { Feature, FeatureCollection, MultiPolygon } from "geojson";
 
-export type TaskID = string;
+export type TaskID = string | undefined;
+
+export interface TaskData {
+    lat: number;
+    lon: number;
+}
 
 export interface TaskBuildingData {
     'PM&T.Region': string;
@@ -31,3 +36,7 @@ export interface ResultBuildingData {
     newLat: number;
     newLon: number;
 }
+
+export type ITask = {
+    readonly id: TaskID;
+};

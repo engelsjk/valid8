@@ -1,56 +1,46 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import React, { useEffect, useState } from "react";
-import { Flex, Box, Label, Button, jsx, Select, Slider, Text, ThemeUIStyleObject } from "theme-ui";
-
-import { submitResultBuilding } from "../api";
-
-import { ResultBuildingData } from "../../shared/entities";
+import React, { Fragment, memo, useEffect, useState } from "react";
+import { Box, Button, Flex, jsx, Themed, ThemeUIStyleObject } from "theme-ui";
+import { heights } from "../theme";
+import { ITask } from "../../shared/entities";
+import TaskName from "../components/TaskName";
 
 const style: Record<string, ThemeUIStyleObject> = {
-    header: {
+    projectHeader: {
         variant: "styles.header.app",
-        backgroundColor: "black",
-        color: "white",
-        alignItems: "center",
-        justifyContent: "space-between",
-        px: 2,
-        py: 1,
-        height: "50px",
-        fontSize: "1.5em"
-    },
-    taskLabel: {
-        paddingLeft: "5px"
-    },
-    submitButton: {
-        color: "black",
-        fontWeight: "bold"
+        backgroundColor: "#00A8E0"
+        // borderBottom: "1px solid",
+        // borderColor: "white"
     }
 };
 
-const TaskHeader = ({
-    label,
-    readyToSubmit,
-    resultBuildingData
-}: {
-    readonly label?: string;
-    readonly readyToSubmit: boolean;
-    readonly resultBuildingData?: ResultBuildingData;
-}) => {
+const HeaderDivider = () => {
     return (
-        <Flex sx={style.header}>
-            <Flex sx={{ flex: 1 }}>
-                <strong>INSTRUCTIONS:</strong><span sx={style.taskLabel}>{label}</span>
-            </Flex>
-            {readyToSubmit &&
-                <button sx={style.submitButton} onClick={() => submitResultBuilding(resultBuildingData)}>
-                    <span>Submit</span>
-                </button>
-            }
-        </Flex>
+        <Box
+            sx={{
+                marginLeft: 1,
+                paddingLeft: 1,
+                height: heights.header
+                // borderLeft: "1px solid rgba(255, 255, 255, 0.25)"
+            }}
+        />
     );
 };
 
-// onClick={submitResultBuilding}
+const TaskHeader = ({
+    task
+}: {
+    readonly task?: ITask
+}) => (
+    <Flex sx={style.projectHeader}>
+        <Flex sx={{ variant: "styles.header.left" }}>
+            {/* <Link></Link> */}
+            <HeaderDivider />
+            {task ? <TaskName task={task} /> : "..."}
+        </Flex>
+        {/* other buttons? */}
+    </Flex>
+);
 
 export default TaskHeader;

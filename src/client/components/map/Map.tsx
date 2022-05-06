@@ -12,36 +12,35 @@ import {
     Point
 } from "../../types";
 
-import Markers from "./Markers";
+import Marker from "./Markers";
 import { MAPBOX_STYLE, MAPBOX_TOKEN } from "../../constants/map";
 
-interface TaskMapProps {
+interface MapProps {
     map?: MapboxGL.Map;
     // eslint-disable-next-line
     setMap: Dispatch<SetStateAction<MapboxGL.Map | undefined>>;
     setHavePoint: Dispatch<SetStateAction<boolean>>;
-    center: Point;
-    buildingPoints?: Point[];
-    taskPoints?: Point[];
-    setTaskPoints: Dispatch<SetStateAction<Point[]>>;
+    taskPoint?: Point;
+    iconName?: string;
+    capturePoint?: Point;
+    setCapturePoint: Dispatch<SetStateAction<Point | undefined>>;
 }
 
-const TaskMap = ({
+const Map = ({
     map,
     setMap,
     setHavePoint,
-    center,
-    buildingPoints,
-    taskPoints,
-    setTaskPoints
-}: TaskMapProps) => {
+    taskPoint,
+    iconName,
+    capturePoint,
+    setCapturePoint
+}: MapProps) => {
     const mapRef = useRef<HTMLDivElement>(null);
 
     const clickHandler = (e: MapboxGL.MapMouseEvent) => {
-        setTaskPoints([{
-            name: "entrance",
+        setCapturePoint({
             lnglat: e.lngLat,
-        }]);
+        });
         setHavePoint(true);
         // setPoints(points => [...points, {
         //     name: "task_point",
@@ -56,13 +55,17 @@ const TaskMap = ({
             return;
         }
 
+        if (!taskPoint) {
+            return;
+        }
+
         // eslint-disable-next-line
         MapboxGL.accessToken = MAPBOX_TOKEN;
 
         const map = new MapboxGL.Map({
             container: mapRef.current,
             style: MAPBOX_STYLE,
-            center: center.lnglat,
+            center: taskPoint.lnglat,
             zoom: 15
             // hash: true
         });
@@ -80,9 +83,9 @@ const TaskMap = ({
 
     return (
         <Box ref={mapRef} sx={{ width: "100%", height: "100%", position: "relative" }}>
-            {map && taskPoints && <Markers map={map} points={taskPoints}></Markers>}
+            {map && capturePoint && <Marker map={map} iconName={iconName} point={capturePoint} setPoint={setCapturePoint}></Marker>}
         </Box >
     )
 }
 
-export default TaskMap;
+export default Map;
