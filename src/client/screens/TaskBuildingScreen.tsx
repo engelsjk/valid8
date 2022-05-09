@@ -5,12 +5,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom'
 import { Flex, jsx } from "theme-ui";
 
-import {
-    Point
-} from "../types";
-
 import { fetchTaskBuilding } from "../api";
-import { ITask, TaskBuildingData, ResultBuildingData } from "../../shared/entities";
+import { ITask, TaskBuildingData, ResultBuildingData, Point } from "../../shared/entities";
 
 import Map from "../components/map/Map";
 import TaskHeader from "../components/TaskHeader";
@@ -35,7 +31,7 @@ const TaskBuildingScreen = () => {
 
     useEffect(() => {
         if (task.id) {
-            fetchTaskBuilding(taskID)
+            fetchTaskBuilding(task.id)
                 .then(bldg => {
                     if (typeof (bldg.lat) != 'number' || typeof (bldg.lon) != 'number') {
                         return;
@@ -47,7 +43,7 @@ const TaskBuildingScreen = () => {
                     setIsLoading(false);
                 });
         }
-    }, [task])
+    }, [])
 
     useEffect(() => {
         if (taskData) {

@@ -6,10 +6,7 @@ import { Box, Button, Flex, jsx, Themed, ThemeUIStyleObject } from "theme-ui";
 import { saveResultBuilding } from "../api";
 import { TaskBuildingData, ResultBuildingData } from "../../shared/entities";
 
-import { ITask } from "../../shared/entities";
-import {
-    Point
-} from "../types";
+import { ITask, Point } from "../../shared/entities";
 
 const style: Record<string, ThemeUIStyleObject> = {
     sidebar: {
@@ -21,7 +18,10 @@ const style: Record<string, ThemeUIStyleObject> = {
     },
     saveButton: {
         width: "100%",
-        maxWidth: "400px"
+        height: "65px",
+        maxWidth: "400px",
+        backgroundColor: "black",
+        fontSize: "2em"
     },
     metadataList: {
         fontSize: "1em",
@@ -104,9 +104,9 @@ const LocationDisplay = ({ capturePoint }: { readonly capturePoint?: Point; }) =
         >
             <div sx={{ height: "100%", display: "inline-block", overflow: "auto" }}>
                 <h2 sx={{ margin: "0 0 5px 0" }}>Location</h2>
-                {capturePoint ? (
+                {capturePoint && capturePoint.lnglat ? (
                     <span>Point: {capturePoint.lnglat.lat.toFixed(5)}, {capturePoint.lnglat.lng.toFixed(5)}</span>
-                ) : <span></span>
+                ) : <span>???</span>
                 }
             </div>
         </Box >
@@ -125,11 +125,9 @@ const SaveButton = ({
             sx={{ height: "10%", flexDirection: "column" }}
         >
             {readyToSave && (
-                <div sx={style.saveButton}>
-                    <button sx={{ width: "100%", height: "65px", fontSize: "2em" }} onClick={() => saveResultBuilding(resultData)}>
-                        <span>Save</span>
-                    </button>
-                </div>
+                <Button sx={style.saveButton} onClick={() => saveResultBuilding(resultData)}>
+                    <span>Save</span>
+                </Button>
             )}
         </Box>
     );

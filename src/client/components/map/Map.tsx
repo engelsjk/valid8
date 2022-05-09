@@ -10,7 +10,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import {
     Point
-} from "../../types";
+} from "../../../shared/entities";
 
 import Marker from "./Markers";
 import { MAPBOX_STYLE, MAPBOX_TOKEN } from "../../constants/map";

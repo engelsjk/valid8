@@ -7,7 +7,7 @@ import MapboxGL from "mapbox-gl";
 
 import {
     Point
-} from "../../types";
+} from "../../../shared/entities";
 
 import Icon from "../Icon";
 import icons from "../../icons";
@@ -27,7 +27,7 @@ const Marker = ({
     const name = iconName ? (Object.keys(icons).includes(iconName) ? iconName as keyof typeof icons : "default") : "default";
 
     useEffect(() => {
-        if (map && point && markerRef.current) {
+        if (map && point && point.lnglat && markerRef.current) {
 
             const marker = new MapboxGL.Marker(markerRef.current, {
                 draggable: true
