@@ -66,7 +66,7 @@ const Map = ({
             container: mapRef.current,
             style: MAPBOX_STYLE,
             center: taskPoint.lnglat,
-            zoom: 15
+            zoom: 17
             // hash: true
         });
 
