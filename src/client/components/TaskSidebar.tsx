@@ -1,7 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import React, { Fragment, memo, useEffect, useState } from "react";
-import { Box, Button, Flex, jsx, Themed, ThemeUIStyleObject } from "theme-ui";
+import { Box, Button, Flex, jsx, ThemeUIStyleObject } from "theme-ui";
 
 import { saveResultBuilding } from "../api";
 import { TaskBuildingData, ResultBuildingData } from "../../shared/entities";
@@ -21,7 +20,20 @@ const style: Record<string, ThemeUIStyleObject> = {
         height: "65px",
         maxWidth: "400px",
         backgroundColor: "black",
-        fontSize: "2em"
+        fontSize: "2em",
+        color: 'white70',
+        border: 'none',
+        outline: 'none',
+        cursor: 'pointer',
+        borderRadius: 4,
+        transition: 'all 200ms',
+        ':focus': {
+            outline: '1px solid',
+        },
+        ':hover': {
+            color: 'white',
+            backgroundColor: '#454545',
+        },
     },
     metadataList: {
         fontSize: "1em",
@@ -106,7 +118,7 @@ const LocationDisplay = ({ capturePoint }: { readonly capturePoint?: Point; }) =
                 <h2 sx={{ margin: "0 0 5px 0" }}>Location</h2>
                 {capturePoint && capturePoint.lnglat ? (
                     <span>Point: {capturePoint.lnglat.lat.toFixed(5)}, {capturePoint.lnglat.lng.toFixed(5)}</span>
-                ) : <span>???</span>
+                ) : <span>Click on the map and drag the marker around to set a location.</span>
                 }
             </div>
         </Box >
@@ -125,7 +137,9 @@ const SaveButton = ({
             sx={{ height: "10%", flexDirection: "column" }}
         >
             {readyToSave && (
-                <Button sx={style.saveButton} onClick={() => saveResultBuilding(resultData)}>
+                <Button sx={{
+                    ...style.saveButton,
+                }} onClick={() => saveResultBuilding(resultData)}>
                     <span>Save</span>
                 </Button>
             )}

@@ -14,7 +14,9 @@ export async function fetchTaskBuilding(id: TaskID): Promise<TaskBuildingData> {
         apiAxios
             .get(`${baseURL}/api/task/building/${id}`)
             .then(response => resolve(response.data))
-            .catch(error => reject(error.message));
+            .catch(error =>
+                reject({ errorMessage: error.response.data, statusCode: error.response.status })
+            );
     });
 }
 
