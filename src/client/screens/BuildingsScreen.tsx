@@ -4,17 +4,19 @@ import { Box, Card, Heading, Link, jsx } from "theme-ui";
 
 import CenteredContent from "../components/CenteredContent";
 
-const PageNotFoundScreen = () => {
+const BuildingsScreen = () => {
     return (
         <CenteredContent>
             <Card sx={{ variant: "cards.floating", mb: 5 }}>
                 <Heading as="h2" sx={{ fontSize: 4, mb: 20, textAlign: "left" }}>
-                    Page not found!
+                    Valid8 : Tasks : Buildings
                 </Heading>
-                <Link href="/">Home</Link>
+                <Box sx={{ fontSize: 1, mt: 3, textAlign: "left" }}>
+                    <Link href="/">Home</Link>
+                </Box>
             </Card>
         </CenteredContent>
     );
 };
 
-export default PageNotFoundScreen;
+export default BuildingsScreen;

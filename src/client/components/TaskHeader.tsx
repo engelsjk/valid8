@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import React, { Fragment, memo, useEffect, useState } from "react";
-import { Box, Button, Flex, jsx, Themed, ThemeUIStyleObject } from "theme-ui";
+import { Box, Button, Flex, jsx, Themed, Text, ThemeUIStyleObject } from "theme-ui";
 import { heights } from "../theme";
 import { ITask } from "../../shared/entities";
 import TaskName from "../components/TaskName";
@@ -37,7 +37,9 @@ const TaskHeader = ({
         <Flex sx={{ variant: "styles.header.left" }}>
             {/* <Link></Link> */}
             <HeaderDivider />
-            {task ? <TaskName task={task} /> : "..."}
+            <Text as="h1" sx={{ variant: "styles.header.title", m: 0 }}>
+                Valid8
+            </Text>
         </Flex>
         {/* other buttons? */}
     </Flex>

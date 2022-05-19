@@ -5,6 +5,8 @@ import { Box, Button, Flex, jsx, ThemeUIStyleObject } from "theme-ui";
 import { saveResultBuilding } from "../api";
 import { TaskBuildingData, ResultBuildingData } from "../../shared/entities";
 
+import TaskName from "./TaskName";
+
 import { ITask, Point } from "../../shared/entities";
 
 const style: Record<string, ThemeUIStyleObject> = {
@@ -45,33 +47,30 @@ const style: Record<string, ThemeUIStyleObject> = {
     }
 }
 
-const Instructions = ({ task }: { readonly task?: ITask }) => {
+const Instructions = ({
+    taskData
+}: {
+    readonly taskData?: TaskBuildingData;
+}) => {
     return (
-        <Box
-            sx={{ height: "15%", flexDirection: "column" }}
-        >
-            <div sx={{ height: "100%", display: "inline-block", overflow: "auto" }}>
-                <h2 sx={{ margin: "0 0 5px 0" }}>Instructions</h2>
-                <span>
-                    Locate the building entrance and click on the map to set a moveable marker at that location.
-                    After you've set the marker at the right location, you can save your correction.
-                </span>
-            </div>
-        </Box >
+        <div sx={{ height: "100%", display: "inline-block", overflow: "auto" }}>
+            <h2 sx={{ margin: "0 0 5px 0" }}>Instructions</h2>
+            {taskData && (
+                <span>{taskData.task_instruction}</span>
+            )}
+        </div>
     );
 };
 
 const Metadata = ({
-    task,
     taskData
 }: {
-    readonly task?: ITask;
     readonly taskData?: TaskBuildingData;
 }) => {
 
     function taskDataList(taskData: TaskBuildingData) {
         return (
-            <div sx={{ height: "100%", display: "inline-block", overflow: "auto" }}>
+            <div >
                 <h2 sx={{ margin: "0 0 5px 0" }}>Building</h2>
                 <ul sx={style.metadataList}>
                     <li><span>CLLI: {taskData['CLLI']}</span></li>
@@ -94,9 +93,7 @@ const Metadata = ({
     }
 
     return (
-        <Box
-            sx={{ height: "35%", flexDirection: "column" }}
-        >
+        <Box sx={{ height: "100%", display: "inline-block", overflow: "auto" }}>
             {taskData && (
                 taskDataList(taskData)
             )}
@@ -111,17 +108,13 @@ export interface Location {
 
 const LocationDisplay = ({ capturePoint }: { readonly capturePoint?: Point; }) => {
     return (
-        <Box
-            sx={{ height: "10%", flexDirection: "column" }}
-        >
-            <div sx={{ height: "100%", display: "inline-block", overflow: "auto" }}>
-                <h2 sx={{ margin: "0 0 5px 0" }}>Location</h2>
-                {capturePoint && capturePoint.lnglat ? (
-                    <span>Point: {capturePoint.lnglat.lat.toFixed(5)}, {capturePoint.lnglat.lng.toFixed(5)}</span>
-                ) : <span>Click on the map and drag the marker around to set a location.</span>
-                }
-            </div>
-        </Box >
+        <div sx={{ height: "100%", display: "inline-block", overflow: "auto" }}>
+            <h2 sx={{ margin: "0 0 5px 0" }}>Location</h2>
+            {capturePoint && capturePoint.lnglat ? (
+                <span>Point: {capturePoint.lnglat.lat.toFixed(5)}, {capturePoint.lnglat.lng.toFixed(5)}</span>
+            ) : <span>Click on the map and drag the marker around to set a location.</span>
+            }
+        </div>
     );
 };
 
@@ -133,9 +126,7 @@ const SaveButton = ({
     readonly resultData?: ResultBuildingData;
 }) => {
     return (
-        <Box
-            sx={{ height: "10%", flexDirection: "column" }}
-        >
+        <Box>
             {readyToSave && (
                 <Button sx={{
                     ...style.saveButton,
@@ -164,13 +155,24 @@ const TaskSidebar = ({
     return (
         <Flex
             sx={style.sidebar}
-            className="map-sidebar"
+            className="task-sidebar"
         >
             <Box sx={{ flex: 1 }}>
-                <Instructions></Instructions>
-                <Metadata task={task} taskData={taskData}></Metadata>
-                <LocationDisplay capturePoint={capturePoint}></LocationDisplay>
-                <SaveButton readyToSave={readyToSave} resultData={resultData}></SaveButton>
+                <Flex sx={{ height: "10%", flexDirection: "column" }}>
+                    {task ? <TaskName task={task} /> : "..."}
+                </Flex>
+                <Flex sx={{ height: "20%", flexDirection: "column" }}>
+                    <Instructions taskData={taskData} />
+                </Flex>
+                <Flex sx={{ height: "45%", flexDirection: "column" }}>
+                    <Metadata taskData={taskData}></Metadata>
+                </Flex>
+                <Flex sx={{ height: "10%", flexDirection: "column" }}>
+                    <LocationDisplay capturePoint={capturePoint}></LocationDisplay>
+                </Flex>
+                <Flex sx={{ height: "10%", flexDirection: "column" }}>
+                    <SaveButton readyToSave={readyToSave} resultData={resultData}></SaveButton>
+                </Flex>
             </Box>
         </Flex>
     );

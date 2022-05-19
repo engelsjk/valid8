@@ -12,10 +12,10 @@ import Map from "../components/map/Map";
 import TaskHeader from "../components/TaskHeader";
 import TaskSidebar from "../components/TaskSidebar";
 
-import PageNotFoundScreen from "./PageNotFoundScreen";
+import TaskNotFoundScreen from "./TaskNotFoundScreen";
 import ErrorScreen from "./ErrorScreen";
 
-const TaskBuildingScreen = () => {
+const BuildingScreen = () => {
 
     const [map, setMap] = useState<MapboxGL.Map | undefined>(undefined);
     const [taskPoint, setTaskPoint] = useState<Point>();
@@ -39,12 +39,12 @@ const TaskBuildingScreen = () => {
                 .then(bldg => {
                     setIsLoading(false);
                     setTaskData(bldg);
-                    if (typeof (bldg.lat) != 'number' || typeof (bldg.lon) != 'number') {
+                    if (typeof (bldg.task_lon) != 'number' || typeof (bldg.task_lat) != 'number') {
                         setHasError(true);
                         return;
                     }
                     setTaskPoint({
-                        lnglat: new MapboxGL.LngLat(bldg.lon, bldg.lat)
+                        lnglat: new MapboxGL.LngLat(bldg.task_lon, bldg.task_lat)
                     });
                 })
                 .catch(err => {
@@ -78,7 +78,7 @@ const TaskBuildingScreen = () => {
         <div className="App">Loading...</div>
     ) : taskNotFound ? (
         <Flex sx={{ height: "100%", flexDirection: "column" }}>
-            <PageNotFoundScreen model={"task"} id={task.id} />
+            <TaskNotFoundScreen model={"task"} id={task.id} />
         </Flex>
     ) : hasError ? (
         <Flex sx={{ height: "100%", flexDirection: "column" }}>
@@ -122,7 +122,7 @@ const TaskBuildingScreen = () => {
     )
 }
 
-export default TaskBuildingScreen;
+export default BuildingScreen;
 
 // setTaskPoints(taskPoints => [...taskPoints, {
 //     name: "task-building",

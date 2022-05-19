@@ -6,8 +6,8 @@ export const heights = {
 
 export const theme: Theme = {
     fonts: {
-        body: 'system-ui, sans-serif',
-        heading: '"Avenir Next", sans-serif',
+        body: 'Verdana, sans-serif',
+        heading: 'Verdana, sans-serif',
         monospace: 'Menlo, monospace',
     },
     colors: {

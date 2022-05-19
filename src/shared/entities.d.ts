@@ -28,6 +28,10 @@ export interface TaskBuildingData {
     'Primary.Asset.Class'?: string;
     'Secondary.Asset.Class'?: string;
     'Property.Manager'?: string;
+    task_lat?: number;
+    task_lon?: number;
+    task_instruction?: string;
+    task_type?: string;
 }
 
 export interface ResultBuildingData {
