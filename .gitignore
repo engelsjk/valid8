@@ -27,6 +27,5 @@ yarn-error.log*
 
 /api
 /bin
-makefile
 
 notes.txt
