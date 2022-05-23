@@ -7,7 +7,7 @@ import {
 } from "../shared/entities";
 
 const apiAxios = axios.create();
-const baseURL = "http://0.0.0.0:3001";
+const baseURL = "";
 
 export async function fetchTaskBuilding(id: TaskID): Promise<TaskBuildingData> {
     return new Promise((resolve, reject) => {
