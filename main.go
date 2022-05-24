@@ -2,85 +2,37 @@ package main
 
 import (
 	"embed"
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
+	"fmt"
+	"log"
 	"os"
-	"path"
 
-	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/engelsjk/valid8/internal"
+	"github.com/engelsjk/valid8/internal/handler"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-//go:embed build
-var content embed.FS
+//go:embed web/build
+var embeddedFiles embed.FS
 
 func main() {
-	addr := os.Getenv("ADDR")
 
-	e := echo.New()
-	e.Use(middleware.Logger())
-
-	e.Validator = &CustomValidator{validator: validator.New()}
-
-	// SPA
-	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
-		Root:   "build",
-		Index:  "index.html",
-		Browse: false,
-		HTML5:  true,
-	}))
-
-	// API
-	e.Static("/api/", "api")
-	e.POST("/api/result/:result/:id", uploadResult)
-
-	e.Logger.Fatal(e.Start(addr))
-}
-
-type (
-	Result struct {
-		TaskID string  `json:"taskID" validate:"required"`
-		LogTS  int     `json:"logTS" validate:"required"`
-		NewLat float64 `json:"newLat" validate:"required"`
-		NewLon float64 `json:"newLon" validate:"required"`
+	if len(os.Args) != 2 {
+		panic(fmt.Errorf("must provide config path arg"))
 	}
 
-	CustomValidator struct {
-		validator *validator.Validate
-	}
-)
+	configPath := os.Args[1]
 
-func (cv *CustomValidator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	return nil
-}
-
-func uploadResult(c echo.Context) error {
-	result := c.Param("result")
-	id := c.Param("id")
-
-	r := new(Result)
-	if err := c.Bind(r); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid result data")
-	}
-	if err := c.Validate(r); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid result data")
-	}
-
-	fn := path.Join("api", "result", result, id)
-
-	j, err := json.MarshalIndent(r, "", " ")
+	cfg, err := internal.NewConfig(configPath)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "unable to save result data")
+		panic(err)
 	}
 
-	if err := ioutil.WriteFile(fn, j, 0644); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "unable to save result data")
-	}
+	app := fiber.New()
+	app.Use(logger.New())
 
-	return c.JSON(http.StatusOK, r)
+	handler.NewAPI(cfg.APIDir).Register(app.Group("/api"))
+	handler.NewStatic(cfg.StaticDir, embeddedFiles).Register(app.Group("/"))
+
+	log.Fatal(app.Listen(cfg.Addr))
 }
