@@ -12,7 +12,7 @@ const baseURL = "";
 export async function fetchTaskBuilding(id: TaskID): Promise<TaskBuildingData> {
     return new Promise((resolve, reject) => {
         apiAxios
-            .get(`${baseURL}/api/task/building/${id}`)
+            .get(`${baseURL}/api/tasks/buildings/${id}`)
             .then(response => resolve(response.data))
             .catch(error =>
                 reject({ errorMessage: error.response.data, statusCode: error.response.status })
@@ -27,7 +27,7 @@ export async function saveResultBuilding(resultBuildingData: ResultBuildingData 
     }
     return new Promise((reject) => {
         apiAxios
-            .post(`${baseURL}/api/result/building/${resultBuildingData.taskID}`, resultBuildingData)
+            .post(`${baseURL}/api/results/buildings/${resultBuildingData.taskID}`, resultBuildingData)
             .catch(error => reject(error.message));
     });
 }

@@ -19,15 +19,15 @@ func NewAPI(path string) API {
 }
 
 func (a API) Register(group fiber.Router) {
-	group.Get("/task/:task/:id", a.Get)
-	group.Post("/result/:result/:id", a.Post)
+	group.Get("/tasks/:task/:id", a.Get)
+	group.Post("/results/:result/:id", a.Post)
 }
 
 func (a API) Get(c *fiber.Ctx) error {
 	task := c.Params("task")
 	id := c.Params("id")
 
-	fn := path.Join(a.path, "task", task, id)
+	fn := path.Join(a.path, "tasks", task, id)
 
 	b, err := os.ReadFile(fn)
 	if err != nil {
@@ -58,7 +58,7 @@ func (a API) Post(c *fiber.Ctx) error {
 	result := c.Params("result")
 	id := c.Params("id")
 
-	fn := path.Join(a.path, "result", result, id)
+	fn := path.Join(a.path, "results", result, id)
 
 	j, err := json.MarshalIndent(r, "", " ")
 	if err != nil {
