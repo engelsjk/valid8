@@ -12,7 +12,7 @@ const HomeScreen = () => {
                     Valid8 : Home
                 </Heading>
                 <Box sx={{ fontSize: 1, mt: 3, textAlign: "left", fontFamily: "body" }}>
-                    <Link href="task">Tasks</Link>
+                    <Link href="tasks">Tasks</Link>
                 </Box>
             </Card>
         </CenteredContent>

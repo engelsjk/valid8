@@ -17,9 +17,9 @@ const App = () => (
       <Routes>
         <Route path="*" element={<PageNotFoundScreen />} />
         <Route path="/" element={<HomeScreen />} />
-        <Route path="task" element={<TasksScreen />} />
-        <Route path="task/building" element={<BuildingsScreen />} />
-        <Route path="task/building/:taskID" element={<BuildingScreen />} />
+        <Route path="tasks" element={<TasksScreen />} />
+        <Route path="tasks/buildings" element={<BuildingsScreen />} />
+        <Route path="tasks/buildings/:taskID" element={<BuildingScreen />} />
       </Routes>
     </BrowserRouter >
   </ThemeProvider >

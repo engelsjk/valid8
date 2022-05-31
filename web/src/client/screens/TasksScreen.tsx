@@ -12,7 +12,7 @@ const TasksScreen = () => {
                     Valid8 : Tasks
                 </Heading>
                 <Box sx={{ fontSize: 1, mt: 3, textAlign: "left" }}>
-                    <Link href="task/building">Buildings</Link>
+                    <Link href="tasks/buildings">Buildings</Link>
                 </Box>
             </Card>
         </CenteredContent>

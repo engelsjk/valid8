@@ -60,7 +60,7 @@ func (a API) Post(c *fiber.Ctx) error {
 
 	fn := path.Join(a.path, "results", result, id)
 
-	j, err := json.MarshalIndent(r, "", " ")
+	j, err := json.Marshal(r)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "unable to save result data",
