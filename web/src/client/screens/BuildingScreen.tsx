@@ -62,7 +62,7 @@ const BuildingScreen = () => {
         if (task.id && capturePoint) {
             setResultData({
                 taskID: task.id,
-                logTs: Math.floor(new Date().getTime() / 1000),
+                logTs: Math.floor(new Date().getTime()),
                 newLat: capturePoint.lnglat.lat,
                 newLon: capturePoint.lnglat.lng
             })

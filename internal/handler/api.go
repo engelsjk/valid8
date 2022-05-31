@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"os"
 	"path"
 
@@ -63,18 +63,32 @@ func (a API) Post(c *fiber.Ctx) error {
 	j, err := json.Marshal(r)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "unable to save result data",
+			"message": "unable to create result data",
 		})
 	}
 
-	if err := ioutil.WriteFile(fn, j, 0644); err != nil {
+	f, err := os.OpenFile(fn, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "unable to save result data",
+			"message": "unable to open result file",
 		})
 	}
+	defer f.Close()
+
+	if _, err := fmt.Fprintln(f, string(j)); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "unable to write result data to file",
+		})
+	}
+
+	// if err := ioutil.WriteFile(fn, j, 0644); err != nil {
+	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+	// 		"message": "unable to save result data",
+	// 	})
+	// }
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "file saved",
+		"message": "results data written to file",
 	})
 }
 
