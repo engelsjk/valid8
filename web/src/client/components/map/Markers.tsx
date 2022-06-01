@@ -52,23 +52,4 @@ const Marker = ({
     )
 }
 
-// const Markers = ({
-//     map,
-//     points
-// }: {
-//     map?: MapboxGL.Map;
-//     points?: Point[]
-// }) => {
-
-//     return (
-//         <div className="markers">          {
-//             points &&
-//             points.map((point, index) => (
-//                 <Marker key={`marker-${index}`} map={map} point={point} />
-//             ))
-//         }
-//         </div>
-//     )
-// }
-
 export default Marker;

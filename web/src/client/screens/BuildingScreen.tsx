@@ -34,6 +34,16 @@ const BuildingScreen = () => {
     }
 
     useEffect(() => {
+
+        if (task.id === "demo") {
+            setTaskPoint({
+                lnglat: new MapboxGL.LngLat(0, 0)
+            });
+            setIsLoading(false);
+            setTaskData({});
+            return;
+        }
+
         if (task.id) {
             fetchTaskBuilding(task.id)
                 .then(bldg => {
@@ -86,7 +96,7 @@ const BuildingScreen = () => {
         </Flex>
     ) : (
         <Flex sx={{ height: "100%", flexDirection: "column" }}>
-            <TaskHeader task={task} />
+            <TaskHeader />
             <Flex sx={{ flex: 1, overflowY: "hidden" }}>
                 {
                     <Flex
@@ -123,8 +133,3 @@ const BuildingScreen = () => {
 }
 
 export default BuildingScreen;
-
-// setTaskPoints(taskPoints => [...taskPoints, {
-//     name: "task-building",
-//     lnglat: new MapboxGL.LngLat(bldg.lon, bldg.lat)
-// }]);

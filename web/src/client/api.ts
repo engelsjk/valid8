@@ -20,14 +20,17 @@ export async function fetchTaskBuilding(id: TaskID): Promise<TaskBuildingData> {
     });
 }
 
-export async function saveResultBuilding(resultBuildingData: ResultBuildingData | undefined) {
+export async function saveResultBuilding(resultBuildingData: ResultBuildingData | undefined): Promise<any> {
     if (!resultBuildingData) {
         console.log("no result building data");
         return;
     }
-    return new Promise((reject) => {
+    return new Promise((resolve, reject) => {
         apiAxios
             .post(`${baseURL}/api/results/buildings/${resultBuildingData.taskID}`, resultBuildingData)
-            .catch(error => reject(error.message));
+            .then(() => resolve(null))
+            .catch(error =>
+                reject({ errorMessage: error.response.data, statusCode: error.response.status })
+            );
     });
 }

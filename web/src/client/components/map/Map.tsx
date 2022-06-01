@@ -42,10 +42,6 @@ const Map = ({
             lnglat: e.lngLat,
         });
         setHavePoint(true);
-        // setPoints(points => [...points, {
-        //     name: "task_point",
-        //     lnglat: e.lngLat,
-        // }]);
     };
 
     useEffect(() => {

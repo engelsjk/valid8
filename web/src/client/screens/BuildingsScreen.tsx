@@ -1,13 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { useRef, useEffect, useState } from "react";
-import { Box, Card, Heading, Input, jsx } from "theme-ui";
+import { useState } from "react";
+import { Box, Card, Heading, Input, Link, jsx } from "theme-ui";
 import { useNavigate } from "react-router-dom";
 
 import CenteredContent from "../components/CenteredContent";
-
-
-
 
 const BuildingsScreen = () => {
 
@@ -32,6 +29,11 @@ const BuildingsScreen = () => {
                         onChange={e => setTaskID(e.target.value)}
                         onKeyUp={keyUpHandler}
                     />
+                </Box>
+                <Box sx={{ fontSize: 1, mt: 3, textAlign: "left" }}>
+                    <ul>
+                        <li><Link href="/tasks/">Back</Link></li>
+                    </ul>
                 </Box>
             </Card>
         </CenteredContent>

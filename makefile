@@ -1,5 +1,7 @@
 build-web:
-	cd web && npm run build && cd ..	
+	cd web && npm run build && cd ..
+start-web:
+	npm start --prefix web	
 tidy:
 	go mod tidy
 run: build-web tidy

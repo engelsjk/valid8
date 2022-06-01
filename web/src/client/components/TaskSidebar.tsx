@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { useState } from 'react';
 import { Box, Button, Flex, jsx, ThemeUIStyleObject } from "theme-ui";
 
 import { saveResultBuilding } from "../api";
@@ -36,6 +37,10 @@ const style: Record<string, ThemeUIStyleObject> = {
             color: 'white',
             backgroundColor: '#454545',
         },
+        ':disabled': {
+            backgroundColor: "#999999",
+            color: "#666666"
+        }
     },
     metadataList: {
         fontSize: "1em",
@@ -44,6 +49,9 @@ const style: Record<string, ThemeUIStyleObject> = {
         padding: "0",
         margin: "0",
         overFlowY: "auto"
+    },
+    label: {
+        fontStyle: "italic"
     }
 }
 
@@ -73,21 +81,63 @@ const Metadata = ({
             <div >
                 <h2 sx={{ margin: "0 0 5px 0" }}>Building</h2>
                 <ul sx={style.metadataList}>
-                    <li><span>CLLI: {taskData['CLLI']}</span></li>
-                    <li><span>Street: {taskData['Street.Address']}</span></li>
-                    <li><span>City: {taskData['City']}</span></li>
-                    <li><span>State: {taskData['State']}</span></li>
-                    <li><span>Zip: {taskData['Zip']}</span></li>
-                    <li><span>PM&T Region: {taskData['PM&T.Region']}</span></li>
-                    <li><span>RE Object: {taskData['RE.Object']}</span></li>
-                    <li><span>AOID: {taskData['AOID']}</span></li>
-                    <li><span>Company Code: {taskData['Company.Code']}</span></li>
-                    <li><span>Legal Entity Name: {taskData['Legal.Entity.Name']}</span></li>
-                    <li><span>Owned/Leased.Ind: {taskData['Owned/Leased.Ind']}</span></li>
-                    <li><span>Primary Asset Class: {taskData['Primary.Asset.Class']}</span></li>
-                    <li><span>Secondary Asset Class: {taskData['Secondary.Asset.Class']}</span></li>
-                    <li><span>Property Manager: {taskData['Property.Manager']}</span></li>
-                </ul>
+                    <li>
+                        <span sx={style.label}>CLLI:</span>
+                        <span> {taskData['CLLI']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>Street:</span>
+                        <span> {taskData['Street.Address']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>City:</span>
+                        <span>{taskData['City']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>State:</span>
+                        <span>{taskData['State']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>Zip:</span>
+                        <span>{taskData['Zip']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>PM&T Region:</span>
+                        <span> {taskData['PM&T.Region']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>RE Object:</span>
+                        <span>{taskData['RE.Object']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>AOID:</span>
+                        <span>{taskData['AOID']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>Company Code:</span>
+                        <span>{taskData['Company.Code']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>Legal Entity Name:</span>
+                        <span>{taskData['Legal.Entity.Name']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>Owned/Leased.Ind:</span>
+                        <span>{taskData['Owned/Leased.Ind']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>Primary Asset Class:</span>
+                        <span>{taskData['Primary.Asset.Class']}</span>
+                    </li>
+                    <li>
+                        <span sx={style.label}>Secondary Asset Class:</span>
+                        <span>{taskData['Secondary.Asset.Class']}</span>
+                    </li >
+                    <li>
+                        <span sx={style.label}>Property Manager:</span>
+                        <span>{taskData['Property.Manager']}</span>
+                    </li >
+                </ul >
             </div >
         )
     }
@@ -118,6 +168,8 @@ const LocationDisplay = ({ capturePoint }: { readonly capturePoint?: Point; }) =
     );
 };
 
+
+
 const SaveButton = ({
     readyToSave,
     resultData
@@ -125,13 +177,33 @@ const SaveButton = ({
     readonly readyToSave: boolean;
     readonly resultData?: ResultBuildingData;
 }) => {
+
+    const [buttonText, setButtonText] = useState("Save");
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+
+    const handleClick = async (resultData: ResultBuildingData | undefined) => {
+        saveResultBuilding(resultData)
+            .then(() => {
+                console.log("saved")
+                setButtonText("Saved");
+                setButtonDisabled(true);
+            })
+            .catch(err => {
+                console.log(err);
+                setButtonText("Error");
+                setButtonDisabled(true);
+            })
+    }
+
     return (
         <Box>
             {readyToSave && (
-                <Button sx={{
-                    ...style.saveButton,
-                }} onClick={() => saveResultBuilding(resultData)}>
-                    <span>Save</span>
+                <Button
+                    sx={{ ...style.saveButton, }}
+                    onClick={() => handleClick(resultData)}
+                    disabled={buttonDisabled}
+                >
+                    <span>{buttonText}</span>
                 </Button>
             )}
         </Box>

@@ -1,47 +1,33 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import React, { Fragment, memo, useEffect, useState } from "react";
-import { Box, Button, Flex, jsx, Themed, Text, ThemeUIStyleObject } from "theme-ui";
-import { heights } from "../theme";
-import { ITask } from "../../shared/entities";
-import TaskName from "../components/TaskName";
+import { Box, Flex, jsx, Text, ThemeUIStyleObject } from "theme-ui";
 
 const style: Record<string, ThemeUIStyleObject> = {
     projectHeader: {
         variant: "styles.header.app",
-        backgroundColor: "#00A8E0"
-        // borderBottom: "1px solid",
-        // borderColor: "white"
+        backgroundColor: "#00A8E0",
+        height: "48px",
+        paddingTop: 1,
+        paddingLeft: 1
     }
 };
 
 const HeaderDivider = () => {
     return (
         <Box
-            sx={{
-                marginLeft: 1,
-                paddingLeft: 1,
-                height: heights.header
-                // borderLeft: "1px solid rgba(255, 255, 255, 0.25)"
-            }}
+            sx={{ ...style.projectHeader }}
         />
     );
 };
 
-const TaskHeader = ({
-    task
-}: {
-    readonly task?: ITask
-}) => (
+const TaskHeader = () => (
     <Flex sx={style.projectHeader}>
         <Flex sx={{ variant: "styles.header.left" }}>
-            {/* <Link></Link> */}
             <HeaderDivider />
             <Text as="h1" sx={{ variant: "styles.header.title", m: 0 }}>
                 Valid8
             </Text>
         </Flex>
-        {/* other buttons? */}
     </Flex>
 );
 

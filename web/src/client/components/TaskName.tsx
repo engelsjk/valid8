@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import React, { Fragment, memo, useEffect, useState } from "react";
-import { Box, Button, Flex, Text, jsx, Themed, ThemeUIStyleObject } from "theme-ui";
+import React from "react";
+import { Flex, Text, jsx, ThemeUIStyleObject } from "theme-ui";
 
 import { ITask } from "../../shared/entities";
 

@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { Box, Card, Heading, Link, jsx } from "theme-ui";
+import { Card, Heading, Link, jsx } from "theme-ui";
 
 import CenteredContent from "../components/CenteredContent";
 
