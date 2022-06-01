@@ -3,8 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"path"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -15,21 +17,26 @@ type API struct {
 }
 
 func NewAPI(path string) API {
+	rand.Seed(time.Now().Unix())
 	return API{path: path}
 }
 
 func (a API) Register(group fiber.Router) {
-	group.Get("/tasks/:task/:id", a.Get)
-	group.Post("/results/:result/:id", a.Post)
+	group.Get("/tasks/:task/random", a.GetTaskRandomID)
+	group.Get("/tasks/:task/:id", a.GetTaskByID)
+	group.Post("/results/:result/:id", a.SaveResults)
 }
 
-func (a API) Get(c *fiber.Ctx) error {
+func (a API) loadTaskFile(task, id string) ([]byte, error) {
+	fn := path.Join(a.path, "tasks", task, id)
+	return os.ReadFile(fn)
+}
+
+func (a API) GetTaskByID(c *fiber.Ctx) error {
 	task := c.Params("task")
 	id := c.Params("id")
 
-	fn := path.Join(a.path, "tasks", task, id)
-
-	b, err := os.ReadFile(fn)
+	b, err := a.loadTaskFile(task, id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "task file not found or unable to read",
@@ -40,7 +47,40 @@ func (a API) Get(c *fiber.Ctx) error {
 	return c.Send(b)
 }
 
-func (a API) Post(c *fiber.Ctx) error {
+func (a API) GetTaskRandomID(c *fiber.Ctx) error {
+	task := c.Params("task")
+
+	fp := path.Join(a.path, "tasks", task)
+
+	f, err := os.Open(fp)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "task dir not found",
+		})
+	}
+
+	files, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "unable to read task dir",
+		})
+	}
+
+	file := files[rand.Intn(len(files))]
+
+	b, err := a.loadTaskFile(task, file.Name())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "task file not found or unable to read",
+		})
+	}
+
+	c.Set("Content-type", "application/json; charset=utf-8")
+	return c.Send(b)
+}
+
+func (a API) SaveResults(c *fiber.Ctx) error {
 
 	r := new(Result)
 
