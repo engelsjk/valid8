@@ -5,37 +5,20 @@ export const heights = {
 };
 
 export const theme: Theme = {
-    fonts: {
-        body: 'Verdana, sans-serif',
-        heading: 'Verdana, sans-serif',
-        monospace: 'Menlo, monospace',
-    },
-    colors: {
-        text: '#000',
-        background: '#fff',
-        primary: '#33e',
-    },
+    fonts: {},
+    colors: {},
     buttons: {
-        icon: {
-
-        }
+        primary: {
+            color: 'white70',
+            bg: 'black',
+        },
+        error: {
+            color: 'red',
+            bg: 'bg',
+        },
     },
     styles: {
-        sidebar: {
-            white: {
-                bg: "muted",
-                boxShadow:
-                    "0 0 0 1px rgba(16,22,26,.1), 0 0 0 rgba(16,22,26,0), 0 1px 1px rgba(16,22,26,.2)",
-                display: "flex",
-                flexDirection: "column",
-                flexShrink: 0,
-                height: "100%",
-                minWidth: "100px",
-                position: "relative",
-                color: "gray.8",
-                zIndex: 200
-            },
-        }
+        sidebar: {}
     }
 };
 

@@ -184,11 +184,11 @@ const SaveButton = ({
     const handleClick = async (resultData: ResultBuildingData | undefined) => {
         saveResultBuilding(resultData)
             .then(() => {
-                setButtonText("Saved");
+                setButtonText("SAVED");
                 setButtonDisabled(true);
             })
             .catch(() => {
-                setButtonText("Error");
+                setButtonText("ERROR");
                 setButtonDisabled(true);
             })
     }
@@ -203,8 +203,9 @@ const SaveButton = ({
                 >
                     <span>{buttonText}</span>
                 </Button>
-            )}
-        </Box>
+            )
+            }
+        </Box >
     );
 };
 
@@ -222,11 +223,11 @@ const TaskSidebar = ({
     readonly resultData?: ResultBuildingData;
 }) => {
 
-    const [buttonText, setButtonText] = useState("Save");
+    const [buttonText, setButtonText] = useState("SAVE");
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
     useEffect(() => {
-        setButtonText("Save");
+        setButtonText("SAVE");
         setButtonDisabled(false);
     }, [capturePoint])
 
