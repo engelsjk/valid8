@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { useState } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Box, Button, Flex, jsx, ThemeUIStyleObject } from "theme-ui";
 
 import { saveResultBuilding } from "../api";
@@ -30,9 +30,6 @@ const style: Record<string, ThemeUIStyleObject> = {
         cursor: 'pointer',
         borderRadius: 4,
         transition: 'all 200ms',
-        ':focus': {
-            outline: '1px solid',
-        },
         ':hover': {
             color: 'white',
             backgroundColor: '#454545',
@@ -82,59 +79,59 @@ const Metadata = ({
                 <h2 sx={{ margin: "0 0 5px 0" }}>Building</h2>
                 <ul sx={style.metadataList}>
                     <li>
-                        <span sx={style.label}>CLLI:</span>
+                        <span sx={style.label}>CLLI: </span>
                         <span> {taskData['CLLI']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>Street:</span>
+                        <span sx={style.label}>Street: </span>
                         <span> {taskData['Street.Address']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>City:</span>
+                        <span sx={style.label}>City: </span>
                         <span>{taskData['City']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>State:</span>
+                        <span sx={style.label}>State: </span>
                         <span>{taskData['State']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>Zip:</span>
+                        <span sx={style.label}>Zip: </span>
                         <span>{taskData['Zip']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>PM&T Region:</span>
+                        <span sx={style.label}>PM&T Region: </span>
                         <span> {taskData['PM&T.Region']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>RE Object:</span>
+                        <span sx={style.label}>RE Object: </span>
                         <span>{taskData['RE.Object']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>AOID:</span>
+                        <span sx={style.label}>AOID: </span>
                         <span>{taskData['AOID']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>Company Code:</span>
+                        <span sx={style.label}>Company Code: </span>
                         <span>{taskData['Company.Code']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>Legal Entity Name:</span>
+                        <span sx={style.label}>Legal Entity Name: </span>
                         <span>{taskData['Legal.Entity.Name']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>Owned/Leased.Ind:</span>
+                        <span sx={style.label}>Owned/Leased.Ind: </span>
                         <span>{taskData['Owned/Leased.Ind']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>Primary Asset Class:</span>
+                        <span sx={style.label}>Primary Asset Class: </span>
                         <span>{taskData['Primary.Asset.Class']}</span>
                     </li>
                     <li>
-                        <span sx={style.label}>Secondary Asset Class:</span>
+                        <span sx={style.label}>Secondary Asset Class: </span>
                         <span>{taskData['Secondary.Asset.Class']}</span>
                     </li >
                     <li>
-                        <span sx={style.label}>Property Manager:</span>
+                        <span sx={style.label}>Property Manager: </span>
                         <span>{taskData['Property.Manager']}</span>
                     </li >
                 </ul >
@@ -168,28 +165,29 @@ const LocationDisplay = ({ capturePoint }: { readonly capturePoint?: Point; }) =
     );
 };
 
-
-
 const SaveButton = ({
     readyToSave,
-    resultData
+    resultData,
+    buttonText,
+    buttonDisabled,
+    setButtonText,
+    setButtonDisabled
 }: {
     readonly readyToSave: boolean;
     readonly resultData?: ResultBuildingData;
+    buttonText: string;
+    buttonDisabled: boolean;
+    setButtonText: Dispatch<SetStateAction<string>>;
+    setButtonDisabled: Dispatch<SetStateAction<boolean>>;
 }) => {
-
-    const [buttonText, setButtonText] = useState("Save");
-    const [buttonDisabled, setButtonDisabled] = useState(false);
 
     const handleClick = async (resultData: ResultBuildingData | undefined) => {
         saveResultBuilding(resultData)
             .then(() => {
-                console.log("saved")
                 setButtonText("Saved");
                 setButtonDisabled(true);
             })
-            .catch(err => {
-                console.log(err);
+            .catch(() => {
                 setButtonText("Error");
                 setButtonDisabled(true);
             })
@@ -199,7 +197,7 @@ const SaveButton = ({
         <Box>
             {readyToSave && (
                 <Button
-                    sx={{ ...style.saveButton, }}
+                    sx={{ ...style.saveButton }}
                     onClick={() => handleClick(resultData)}
                     disabled={buttonDisabled}
                 >
@@ -224,6 +222,14 @@ const TaskSidebar = ({
     readonly resultData?: ResultBuildingData;
 }) => {
 
+    const [buttonText, setButtonText] = useState("Save");
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+
+    useEffect(() => {
+        setButtonText("Save");
+        setButtonDisabled(false);
+    }, [capturePoint])
+
     return (
         <Flex
             sx={style.sidebar}
@@ -243,10 +249,17 @@ const TaskSidebar = ({
                     <LocationDisplay capturePoint={capturePoint}></LocationDisplay>
                 </Flex>
                 <Flex sx={{ height: "10%", flexDirection: "column" }}>
-                    <SaveButton readyToSave={readyToSave} resultData={resultData}></SaveButton>
+                    <SaveButton
+                        readyToSave={readyToSave}
+                        resultData={resultData}
+                        buttonText={buttonText}
+                        buttonDisabled={buttonDisabled}
+                        setButtonText={setButtonText}
+                        setButtonDisabled={setButtonDisabled}
+                    ></SaveButton>
                 </Flex>
-            </Box>
-        </Flex>
+            </Box >
+        </Flex >
     );
 };
 
